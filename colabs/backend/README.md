@@ -52,6 +52,12 @@ Copy the example file:
 cp .env.example .env
 ```
 
+Update `MONGO_URI` in `.env` with your MongoDB Atlas password:
+
+```env
+MONGO_URI=mongodb+srv://anuragh3re_db_user:<db_password>@colabz1.eearfex.mongodb.net/colabs?retryWrites=true&w=majority&appName=colabz1
+```
+
 ### 3️⃣ Run Development Server
 
 ```bash
