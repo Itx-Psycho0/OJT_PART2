@@ -4,6 +4,8 @@ const express = require("express");
 const http = require("http");
 const cors = require("cors");
 const connectDB = require("./config/db");
+const session = require("express-session");
+const passport = require("./config/passport");
 
 const app = express();
 const server = http.createServer(app);
@@ -17,11 +19,21 @@ app.use(
   })
 );
 
+app.use(
+  session({
+    secret: "keyboardcat",
+    resave: false,
+    saveUninitialized: false
+  })
+);
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Routes
 
 
 app.use("/api/health", require("./routes/health.routes"));
+app.use("/auth", require("./routes/auth.routes"));
 
 // Optional root route
 app.get("/", (req, res) => {
@@ -46,5 +58,6 @@ const startServer = async () => {
     process.exit(1);
   }
 };
+
 
 startServer();
