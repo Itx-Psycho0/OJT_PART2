@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const connectDB = async () => {
   const mongoUri = process.env.MONGO_URI;
@@ -8,7 +8,8 @@ const connectDB = async () => {
   }
 
   await mongoose.connect(mongoUri);
+
   console.log("MongoDB connected successfully");
 };
 
-module.exports = connectDB;
+export default connectDB;
