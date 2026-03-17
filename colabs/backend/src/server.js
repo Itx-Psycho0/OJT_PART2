@@ -1,5 +1,4 @@
-import dotenv from "dotenv";
-dotenv.config();
+import config from "./config/config.js";
 
 import express from "express";
 import http from "http";
@@ -18,7 +17,7 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "http://localhost:3000",
+    origin: config.clientUrl,
     credentials: true,
   })
 );
@@ -44,7 +43,7 @@ app.get("/", (req, res) => {
 });
 
 // Server Start
-const PORT = process.env.PORT || 5000;
+const PORT = config.port;
 
 const startServer = async () => {
   try {
