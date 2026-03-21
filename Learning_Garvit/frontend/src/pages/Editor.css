@@ -1,0 +1,140 @@
+.editor-layout {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: #f8f9fa;
+  min-height: calc(100vh - 64px); /* Assuming navbar is 64px */
+}
+
+.editor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 8px 16px;
+  background: white;
+  border-radius: 0;
+  border-bottom: 1px solid #e2e8f0;
+  position: sticky;
+  top: 64px;
+  z-index: 10;
+}
+
+.header-left {
+  display: flex;
+  flex-direction: column;
+}
+
+.doc-title-input {
+  font-size: 1.1rem;
+  font-weight: 500;
+  border: 1px solid transparent;
+  padding: 2px 6px;
+  border-radius: 4px;
+  outline: none;
+  font-family: inherit;
+  transition: var(--transition);
+  color: var(--text-main);
+  background: transparent;
+}
+
+.doc-title-input:hover {
+  border-color: #e2e8f0;
+}
+
+.doc-title-input:focus {
+  border-color: var(--primary-color);
+  background: white;
+}
+
+.doc-menu {
+  display: flex;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.doc-menu span {
+  font-size: 0.85rem;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--text-main);
+  transition: background 0.2s;
+}
+
+.doc-menu span:hover {
+  background: #f1f5f9;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 4px;
+}
+
+.icon-btn {
+  padding: 8px;
+  border-radius: 50%;
+  color: var(--text-muted);
+}
+
+.icon-btn:hover {
+  color: var(--text-main);
+  background: #f1f5f9;
+}
+
+.share-btn {
+  border-radius: 20px;
+  padding: 8px 16px;
+}
+
+.editor-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.editor-page {
+  width: 100%;
+  max-width: 850px;
+  min-height: 1100px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  padding: 40px 0; /* Padding around quill */
+}
+
+/* Customizing React Quill to look like a document page */
+.quill {
+  height: 100%;
+  border-radius: 8px;
+}
+
+.ql-toolbar.ql-snow {
+  border: none;
+  border-bottom: 1px solid #e2e8f0;
+  position: sticky;
+  top: 120px; /* Below the header */
+  background: #f8f9fa;
+  z-index: 5;
+  border-radius: 8px 8px 0 0;
+  padding: 12px;
+}
+
+.ql-container.ql-snow {
+  border: none;
+  border-radius: 0 0 8px 8px;
+  font-size: 11pt;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+.ql-editor {
+  padding: 0 80px; /* Margins for A4 feel */
+  min-height: 800px;
+}
+
+.ql-editor p {
+  line-height: 1.6;
+}
