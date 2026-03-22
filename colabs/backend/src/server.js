@@ -5,10 +5,12 @@ import http from "http";
 import cors from "cors";
 import connectDB from "./config/db.js";
 import session from "express-session";
-import passport from "passport";
+import passport from "./config/passport.js";
 
 import healthRoutes from "./routes/health.routes.js";
 import authRoutes from "./routes/auth.routes.js";
+import notFound from "./middleware/notFound.middleware.js";
+import errorHandler from "./middleware/error.middleware.js";
 
 const app = express();
 const server = http.createServer(app);
@@ -41,6 +43,9 @@ app.use("/auth", authRoutes);
 app.get("/", (req, res) => {
   res.send("CoLabs Backend Running");
 });
+
+app.use(notFound);
+app.use(errorHandler);
 
 // Server Start
 const PORT = config.port;
