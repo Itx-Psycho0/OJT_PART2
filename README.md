@@ -1,113 +1,90 @@
-# OJT Part 2 - On-the-Job Training Repository
+# CoLabs - Reak Time Collaborative editor
 
-This repository contains learning materials, documentation, and practice projects for On-the-Job Training (OJT) Part 2.
+This repository contains learning materials, documentation, and practice projects for On-the-Job Training (OJT).
 
 ## 📚 Overview
 
-This is a collaborative learning repository where trainees document their learning journey and build practical projects. The focus is on backend development, real-time systems, and modern web technologies.
+This is a full-stack project focused on building a **real-time collaborative platform**.  
+The goal is to understand modern web development by implementing backend systems, frontend architecture, and real-time features.
 
 ## 👥 Contributors
 
-- **Anurag** - Learning materials and practice projects
-- **Garvit** - Learning materials and practice projects
+- **Anurag** 
+- **Garvit** 
 
 ## 📂 Repository Structure
 
 ```
-OJT_PART2/
-├── Learning_Anurag/       # Anurag's learning materials and projects
-│   └── server.js          # Server implementation
-├── Learning_Garvit/       # Garvit's learning materials and projects
-│   ├── server.js          # Server implementation
-│   ├── Topics.md          # Learning roadmap and topics
-│   └── BackendStructure.md # Backend architecture documentation
-└── README.md              # This file
+colabs/
+├── backend/ # Backend APIs, authentication, database
+├── client/ # Next.js frontend application
+└── README.md
 ```
 
-## 🎯 Learning Topics
 
-The training covers a comprehensive backend development roadmap including:
+## 🎯 Project Focus
 
-### Core Technologies
-- **JavaScript (ES6+)**: async/await, Promises, ES Modules, Map, Set
-- **Node.js**: Event loop, HTTP module, process management
-- **Express**: Routing, middleware, request-response lifecycle
+The main project is building a collaborative platform with:
 
-### Advanced Topics
-- **JWT Authentication**: Token generation, verification, auth middleware
-- **WebSockets**: Real-time bidirectional communication
-- **Rooms/Channels**: Group communication and broadcasting
-- **Redis**: Key-value storage, caching, Pub/Sub patterns
-- **MySQL**: Relational databases, relationships, constraints, indexes
-- **React Native**: Mobile integration with WebSocket
-
-### Project Focus: Real-Time Polling System
-
-The main project is building a live polling application with:
-- User authentication (JWT)
-- Real-time voting using WebSockets
-- One-vote-per-user constraint
-- Redis for fast data access
-- MySQL for persistent storage
-- Live result updates
-
-## 📖 Documentation
-
-Detailed documentation is available in the following files:
-
-- **[Learning_Garvit/Topics.md](Learning_Garvit/Topics.md)**: Complete learning roadmap from beginner to project-ready
-- **[Learning_Garvit/BackendStructure.md](Learning_Garvit/BackendStructure.md)**: Detailed backend architecture and folder structure
-
-## 🚀 Getting Started
-
-Each learning directory contains its own implementations. Navigate to the respective directory to explore:
-
-```bash
-# For Anurag's work
-cd Learning_Anurag
-
-# For Garvit's work
-cd Learning_Garvit
-```
-
-## 📝 Learning Approach
-
-1. **Study Core Concepts**: Start with JavaScript fundamentals and progress through the topics
-2. **Understand Architecture**: Review the backend structure documentation
-3. **Hands-on Practice**: Implement features incrementally
-4. **Build Projects**: Apply learned concepts in real-world scenarios
+- User authentication 
+- Document creation and management
+- Rich text editing
+- Scalable backend APIs
+- Real-time collaboration (planned)
 
 ## 🛠️ Technologies Stack
 
-- **Runtime**: Node.js
-- **Framework**: Express.js
-- **Database**: MySQL
-- **Cache**: Redis
-- **Authentication**: JWT (JSON Web Tokens)
-- **Real-time**: WebSockets (Socket.io)
-- **Language**: JavaScript/TypeScript
+### Backend
+- Node.js
+- Express.js
+- MongoDB (Mongoose)
+- Passport.js (Google OAuth)
+- Socekt.io
 
-## 📌 Project Goals
+### Frontend
+- Next.js
+- React
+- TipTap Editor
 
-- Build production-ready backend applications
-- Understand real-time communication patterns
-- Master authentication and authorization
-- Learn database design and optimization
-- Implement scalable architecture patterns
+### Concepts Covered
+- Authentication (OAuth)
+- REST API design
+- SSR vs CSR
+- Backend architecture
+- Redis (caching – basics)
+- Websockets
 
-## 🤝 Contributing
+## 📖 Development Approach
 
-This is a learning repository. Each contributor maintains their own learning directory and is encouraged to:
+1. Set up structured backend with proper routing and middleware  
+2. Design and implement APIs for users and documents  
+3. Build frontend using Next.js and component-based structure  
+4. Integrate frontend with backend APIs  
+5. Gradually move towards real-time collaboration features  
 
-- Document learning progress
-- Share code implementations
-- Add helpful comments and explanations
-- Keep documentation up-to-date
+## 🚀 Current Status
+
+- Backend structure and APIs implemented  
+- Google OAuth authentication integrated  
+- Frontend initialized and structured  
+- TipTap editor integrated  
+- API integration completed  
+
+Project is currently in the **development phase**, focusing on improving features and adding real-time capabilities.
+
+## 📌 Goals
+
+- Build a production-ready full-stack application  
+- Understand real-time systems  
+- Improve system design and architecture skills  
+- Learn performance optimization techniques  
+
+## 🤝 Contribution
+
+This repository is part of OJT training. Contributions are focused on individual learning and project development.
 
 ## 📄 License
 
-This repository is for educational purposes as part of On-the-Job Training.
+This project is for educational purposes as part of On-the-Job Training.
 
 ---
-
-**Note**: This is Part 2 of the OJT program. Refer to Part 1 for foundational topics.
