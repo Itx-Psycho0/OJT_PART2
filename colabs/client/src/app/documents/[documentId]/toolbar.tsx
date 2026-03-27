@@ -2,11 +2,113 @@
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { useEditorStore } from "@/store/use-editor-store";
-import { BoldIcon, ChevronDownIcon, HighlighterIcon, ItalicIcon, ListTodoIcon, LucideIcon, MessageSquarePlusIcon, PrinterIcon, Redo2Icon, RemoveFormattingIcon, SpellCheckIcon, UnderlineIcon, Undo2Icon } from "lucide-react";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { BoldIcon, ChevronDownIcon, HighlighterIcon, ImageIcon, ItalicIcon, Link2Icon, ListTodoIcon, LucideIcon, MessageSquarePlusIcon, PrinterIcon, Redo2Icon, RemoveFormattingIcon, SearchIcon, SpellCheckIcon, UnderlineIcon, Undo2Icon, UploadIcon } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import {type Level} from "@tiptap/extension-heading"
 import {type ColorResult, SketchPicker} from 'react-color'
+import { useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Dialog,DialogContent,DialogFooter,DialogHeader,DialogTitle } from "@/components/ui/dialog";
 
+const ImageButton=()=>{
+  const {editor}=useEditorStore();
+  const [isDialogOpen, setIsDialogOpen]=useState(false)
+  const [imageUrl, setImageUrl]=useState(editor?.getAttributes("link").href || "")
+  const onChange=(src:string)=>{
+    editor?.chain().focus().setImage({src}).run();
+  }
+
+  const onUpload=()=>{
+    const input=document.createElement("input");
+    input.type="file";
+    input.accept="image/*";
+    input.onchange=(e)=>{
+      const file=(e.target as HTMLInputElement).files?.[0]
+      if (file){
+        const imageUrl=URL.createObjectURL(file);
+        onChange(imageUrl);
+      }
+    }
+    input.click()
+  }
+
+  const handleUrlSubmit=()=>{
+    if (imageUrl){
+      onChange(imageUrl);
+      setImageUrl("");
+      setIsDialogOpen(false)
+    }
+  };
+
+  return (<>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild >
+        <button className="h-7 min-w-7 flex items-center justify-center rounded-sm hover:bg-neutral-300">
+        <ImageIcon className="size-4"/>
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="bg-white border border-neutral-200 shadow-md">
+        <DropdownMenuItem onClick={onUpload}>
+          <UploadIcon  className="size-4 mr-2"/>
+          Upload
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={()=>setIsDialogOpen(true)}>
+          <SearchIcon  className="size-4 mr-2"/>
+          Paste Image Url
+        </DropdownMenuItem>
+      </DropdownMenuContent >
+    </DropdownMenu>
+    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Insert Image URL</DialogTitle>
+        </DialogHeader>
+        <Input placeholder="Inser image URL" 
+        value={imageUrl} 
+        onChange={(e)=>setImageUrl(e.target.value)}
+         onKeyDown={(e)=>{
+          if(e.key==="Enter"){
+            handleUrlSubmit();
+          }
+         }
+
+        }/>
+
+        <DialogFooter>
+        <Button onClick={handleUrlSubmit}>
+          Insert
+        </Button>
+      </DialogFooter>
+      </DialogContent>
+      
+    </Dialog>
+    </>
+  );
+}
+
+const LinkButton=()=>{
+  const {editor}=useEditorStore();
+  const [value, setValue]=useState(editor?.getAttributes("link").href || "")
+  const onChange=(href:string)=>{
+    editor?.chain().focus().extendMarkRange("link").setLink({href}).run();
+    setValue("");
+  }
+
+  return (
+    <DropdownMenu onOpenChange={(open)=>{if (open){setValue(editor?.getAttributes("link").href || "")}}}>
+      <DropdownMenuTrigger asChild >
+        <button className="h-7 min-w-7 flex items-center justify-center rounded-sm hover:bg-neutral-300">
+        <Link2Icon className="size-4"/>
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="p-2.5 flex items-center gap-x-2 bg-white border border-neutral-200 shadow-md">
+        <Input placeholder="https://example.com" value={value} onChange={(e)=> setValue(e.target.value)} />
+        <Button onClick={()=>onChange(value)}>Apply</Button>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
 const HighlightColorButton = () => {
   const { editor } = useEditorStore();
 
@@ -20,8 +122,8 @@ const HighlightColorButton = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className="h-5 min-w-7 shrink-0 flex flex-col items-center justify-between rounded-sm hover:bg-neutral-200/80 px-1.5 text-sm">
-        <HighlighterIcon className="size-4"/>
+        <button className="h-7 min-w-7 flex items-center justify-center rounded-sm hover:bg-neutral-300">
+          <HighlighterIcon className="size-4"/>
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="border-0 p-0">
@@ -44,12 +146,11 @@ const TextColorButton = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className="h-5 min-w-7 shrink-0 flex flex-col items-center justify-between rounded-sm hover:bg-neutral-200/80 px-1.5 text-sm">
-          <span className="text-xs">A</span>
+        <button className="h-7 min-w-7 flex flex-col items-center justify-center rounded-sm hover:bg-neutral-300">
+          <span className="text-xs leading-none">A</span>
           <div
-            className="h-0.5 w-full"
-            style={{ backgroundColor: value }}
-          />
+            className="h-0.5 w-4 mt-0.5"
+            style={{ backgroundColor: value }}/>
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="border-0 p-0">
@@ -188,7 +289,7 @@ const FontFamilyButton=()=>{
       <DropdownMenuContent className="p-1 flex flex-col gap-y-1 bg-white text-black border border-neutral-200 shadow-md">
         {fonts.map(({label,value})=>(
           <button onClick={()=>editor?.chain().focus().setFontFamily(value).run()} key={value} className={cn("flex items-center gap-x-2 px-2 py-1  rounded-sm hover:bg-neutral-200/80",
-            editor?.getAttributes("textSyle").fontFamily==value && "bg-neutral-200/80")}
+            editor?.getAttributes("textStyle").fontFamily==value && "bg-neutral-200/80")}
             style={{fontFamily:value}}
             >
               <span className="text-sm ">{label}</span>
@@ -301,7 +402,9 @@ const Toolbar = () => {
       <HighlightColorButton/>
       <Separator orientation="vertical" className="h-6 bg-gray-300 "/>
       {/*Link*/}
+      <LinkButton/>
       {/*Image*/}
+      <ImageButton/>
       {/*Align*/}
       {/*Line Height*/}
       {/*List*/}
