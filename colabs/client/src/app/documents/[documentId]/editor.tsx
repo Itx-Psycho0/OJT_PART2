@@ -16,14 +16,41 @@ import Color from "@tiptap/extension-color";
 import Highlight from "@tiptap/extension-highlight"
 import Link from "@tiptap/extension-link";
 import TextAlign from "@tiptap/extension-text-align"
+import * as Y from "yjs";
+import { SocketIOProvider } from "y-socket.io";
+import Collaboration from "@tiptap/extension-collaboration";
+import { useMemo, useEffect } from "react";
 
 import { useEditorStore } from "@/store/use-editor-store";
 import { FontSizeExtension } from "@/extensions/font-size";
 import { LineHeightExtension } from "@/extensions/line-height";
 import {Ruler} from "./ruler";
 
-export const Editor = () => {
+interface EditorProps {
+  documentId: string;
+};
+
+export const Editor = ({ documentId }: EditorProps) => {
   const {setEditor} =useEditorStore();
+
+  const { ydoc, provider } = useMemo(() => {
+    const ydoc = new Y.Doc();
+    const provider = new SocketIOProvider(
+      "http://localhost:5000",
+      documentId || "my-doc",
+      ydoc,
+      { autoConnect: true }
+    );
+    return { ydoc, provider };
+  }, [documentId]);
+
+  useEffect(() => {
+    return () => {
+      provider.destroy();
+    };
+  }, [provider]);
+
+
   const editor = useEditor({
     immediatelyRender:false, 
     onCreate({editor}){
@@ -58,7 +85,12 @@ export const Editor = () => {
 
     },
     extensions: [
-      StarterKit,
+      StarterKit.configure({
+      history: false, 
+      }),
+      Collaboration.configure({
+        document: ydoc,
+      }),
       LineHeightExtension.configure({
         types:["heading","paragraph"]
       }),
@@ -89,25 +121,8 @@ export const Editor = () => {
       }),
       TaskList
     ],
-    content: `
-        <table>
-          <tbody>
-            <tr>
-              <th>Name</th>
-              <th colspan="3">Description</th>
-            </tr>
-            <tr>
-              <td>Cyndi Lauper</td>
-              <td>Singer</td>
-              <td>Songwriter</td>
-              <td>Actress</td>
-            </tr>
-          </tbody>
-        </table>
-      `,
-    
-    
   });
+
   return (
     <div className="size-full overflow-x-auto bg-[#F9FBFD] px-4  print:p-0 print:bg-white print:overflow-visible">
       <Ruler/>

@@ -11,18 +11,33 @@ import healthRoutes from "./routes/health.routes.js";
 import authRoutes from "./routes/auth.routes.js";
 import notFound from "./middleware/notFound.middleware.js";
 import errorHandler from "./middleware/error.middleware.js";
+import { Server } from "socket.io";
+import { initCollaboration } from "./sockets/collaboration.js";
+
 
 const app = express();
 const server = http.createServer(app);
 
 app.use(express.json());
 
+const allowedOrigins = [
+  "http://localhost:3000",
+  config.clientUrl,
+];
+
 app.use(
   cors({
-    origin: config.clientUrl,
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("CORS not allowed"));
+      }
+    },
     credentials: true,
   })
 );
+
 
 app.use(
   session({
@@ -46,6 +61,18 @@ app.get("/", (req, res) => {
 
 app.use(notFound);
 app.use(errorHandler);
+
+// Socket.io Setup
+const io = new Server(server, {
+  cors: {
+    origin: allowedOrigins,
+    credentials: true,
+  },
+});
+
+
+initCollaboration(io);
+
 
 // Server Start
 const PORT = config.port;
