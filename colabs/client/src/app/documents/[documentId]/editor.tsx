@@ -35,8 +35,11 @@ export const Editor = ({ documentId }: EditorProps) => {
 
   const { ydoc, provider } = useMemo(() => {
     const ydoc = new Y.Doc();
+    const SOCKET_URL =
+      process.env.NEXT_PUBLIC_SOCKET_URL || "http://localhost:5000";
+
     const provider = new SocketIOProvider(
-      "http://localhost:5000",
+      SOCKET_URL,
       documentId || "my-doc",
       ydoc,
       { autoConnect: true }
