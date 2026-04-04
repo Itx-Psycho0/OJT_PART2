@@ -10,7 +10,7 @@ const Page = () => {
           <Navbar />
         </Suspense>
       </div>
-      <div className="mt-28">
+      <div className="mt-20">
         <TemplateGallery />
       </div>
     </div>
