@@ -3,6 +3,7 @@ import config from "./config/config.js";
 import express from "express";
 import http from "http";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import connectDB from "./config/db.js";
 import session from "express-session";
 import passport from "./config/passport.js";
@@ -19,9 +20,9 @@ const app = express();
 const server = http.createServer(app);
 
 app.use(express.json());
+app.use(cookieParser());
 
 const allowedOrigins = [
-  "http://localhost:3000",
   config.clientUrl,
 ];
 
@@ -41,7 +42,7 @@ app.use(
 
 app.use(
   session({
-    secret: "keyboardcat",
+    secret: config.jwtSecret,
     resave: false,
     saveUninitialized: false,
   })
