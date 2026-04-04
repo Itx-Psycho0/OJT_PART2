@@ -1,13 +1,14 @@
-import React from 'react'
-import {BsCloudCheck} from 'react-icons/bs'
+import React from "react";
+import { BsCloudCheck } from "react-icons/bs";
 const DocumentInput = () => {
   return (
-    <div className='flex items-center gap-2'>
-        <span className='text-lg cursor-pointer px-1.5 truncate'>Untitled Document</span>
-        <BsCloudCheck/>
-      
+    <div className="flex items-center gap-2">
+      <span className="text-lg cursor-pointer px-1.5 truncate">
+        Untitled Document
+      </span>
+      <BsCloudCheck />
     </div>
-  )
-}
+  );
+};
 
-export default DocumentInput
+export default DocumentInput;

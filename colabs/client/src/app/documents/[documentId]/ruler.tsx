@@ -56,7 +56,6 @@ export const Ruler = () => {
 
   const rulerRef = useRef<HTMLDivElement>(null);
 
-
   const handleLeftMouseDown = () => {
     setIsDraggingLeft(true);
   };
