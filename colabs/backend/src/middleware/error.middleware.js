@@ -1,3 +1,5 @@
+import config from "../config/config.js";
+
 const errorHandler = (err, req, res, next) => {
   const statusCode = err.statusCode || 500;
   const status = err.status || "error";
@@ -8,7 +10,7 @@ const errorHandler = (err, req, res, next) => {
     message: err.message || "Internal Server Error",
   };
 
-  if (process.env.NODE_ENV !== "production") {
+  if (config.nodeEnv !== "production") {
     response.stack = err.stack;
   }
 
