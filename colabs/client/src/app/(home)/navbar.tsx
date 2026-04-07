@@ -30,7 +30,7 @@ export const Navbar = () => {
             <DropdownMenuTrigger asChild>
               <button className="flex items-center gap-2 rounded-full hover:bg-neutral-100 p-1 pr-2 transition-colors">
                 {user.avatar ? (
-                  <Image
+                  <img
                     src={user.avatar}
                     alt={user.displayName}
                     className="h-8 w-8 rounded-full object-cover"
