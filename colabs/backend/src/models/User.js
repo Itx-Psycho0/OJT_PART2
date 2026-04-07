@@ -44,7 +44,6 @@ userSchema.virtual("avatar").get(function () {
   return this.uploadedAvatar ?? this.googleAvatar ?? null;
 });
 
-userSchema.index({ googleId: 1 }, { sparse: true });
 
 userSchema.statics.findOrCreateFromGoogle = async function ({
   googleId,

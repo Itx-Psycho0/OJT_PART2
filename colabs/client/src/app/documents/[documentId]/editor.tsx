@@ -49,7 +49,9 @@ export const Editor = ({ documentId }: EditorProps) => {
 
   useEffect(() => {
     return () => {
-      provider.destroy();
+      if (process.env.NODE_ENV === "production") {
+        provider.destroy();
+      }
     };
   }, [provider]);
 
