@@ -14,7 +14,8 @@ import notFound from "./middleware/notFound.middleware.js";
 import errorHandler from "./middleware/error.middleware.js";
 import { Server } from "socket.io";
 import { initCollaboration } from "./sockets/collaboration.js";
-
+import documentRoutes from "./routes/document.routes.js";
+import { initializeYjsSocket } from "./socket/yjs.socket.js";
 
 const app = express();
 const server = http.createServer(app);
@@ -54,6 +55,7 @@ app.use(passport.session());
 // Routes
 app.use("/api/health", healthRoutes);
 app.use("/auth", authRoutes);
+app.use("/api/documents", documentRoutes);
 
 // Root route
 app.get("/", (req, res) => {
@@ -73,7 +75,7 @@ const io = new Server(server, {
 
 
 initCollaboration(io);
-
+initializeYjsSocket(io);
 
 // Server Start
 const PORT = config.port;
