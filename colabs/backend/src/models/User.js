@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema(
     },
     googleAvatar: { type: String, default: null },
     uploadedAvatar: { type: String, default: null },
-    googleId: { type: String, sparse: true, unique: true, default: null },
+    googleId: { type: String, sparse: true, unique: true },
     passwordHash: { type: String, select: false, default: null },
     isActive: { type: Boolean, default: true },
   },
@@ -24,16 +24,15 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-userSchema.pre("save", async function (next) {
+userSchema.pre("save", async function () {
   if (!this.googleId && !this.passwordHash) {
-    return next(new Error("User must have either Google auth or a password"));
+    throw new Error("User must have either Google auth or a password");
   }
 
   if (this.isModified("passwordHash") && this.passwordHash) {
     const salt = await bcrypt.genSalt(10);
     this.passwordHash = await bcrypt.hash(this.passwordHash, salt);
   }
-  next();
 });
 
 userSchema.methods.comparePassword = async function (candidatePassword) {
