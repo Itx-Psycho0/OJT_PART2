@@ -12,6 +12,8 @@ interface AuthState {
   user: User | null;
   isLoading: boolean;
   login: () => void;
+  loginWithPassword: (data: Record<string, string>) => Promise<{ success: boolean; message?: string }>;
+  register: (data: Record<string, string>) => Promise<{ success: boolean; message?: string }>;
   logout: () => Promise<void>;
   checkAuth: () => Promise<void>;
 }
@@ -24,6 +26,44 @@ export const useAuthStore = create<AuthState>((set) => ({
 
   login: () => {
     window.location.href = `${API_URL}/auth/google`;
+  },
+
+  loginWithPassword: async (data: Record<string, string>) => {
+    try {
+      const res = await fetch(`${API_URL}/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+        credentials: "include",
+      });
+      const result = await res.json();
+      if (res.ok && result.success) {
+        set({ user: result.user });
+        return { success: true };
+      }
+      return { success: false, message: result.message || "Login failed" };
+    } catch {
+      return { success: false, message: "Network error" };
+    }
+  },
+
+  register: async (data: Record<string, string>) => {
+    try {
+      const res = await fetch(`${API_URL}/auth/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+        credentials: "include",
+      });
+      const result = await res.json();
+      if (res.ok && result.success) {
+        set({ user: result.user });
+        return { success: true };
+      }
+      return { success: false, message: result.message || "Registration failed" };
+    } catch {
+      return { success: false, message: "Network error" };
+    }
   },
 
   checkAuth: async () => {

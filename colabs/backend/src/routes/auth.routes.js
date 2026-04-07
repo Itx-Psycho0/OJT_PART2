@@ -1,7 +1,7 @@
 import express from "express";
 import passport from "passport";
 import config from "../config/config.js";
-import { googleCallback, logout, getMe } from "../controllers/auth.controller.js";
+import { googleCallback, logout, getMe, register, login } from "../controllers/auth.controller.js";
 
 const router = express.Router();
 
@@ -19,6 +19,8 @@ router.get(
   googleCallback
 );
 
+router.post("/register", register);
+router.post("/login", login);
 router.post("/logout", logout);
 
 router.get(

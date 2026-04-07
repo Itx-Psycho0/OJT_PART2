@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import bcrypt from "bcryptjs";
 
 const userSchema = new mongoose.Schema(
   {
@@ -23,11 +24,22 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-userSchema.pre("save", function () {
+userSchema.pre("save", async function (next) {
   if (!this.googleId && !this.passwordHash) {
-    throw new Error("User must have either Google auth or a password");
+    return next(new Error("User must have either Google auth or a password"));
   }
+
+  if (this.isModified("passwordHash") && this.passwordHash) {
+    const salt = await bcrypt.genSalt(10);
+    this.passwordHash = await bcrypt.hash(this.passwordHash, salt);
+  }
+  next();
 });
+
+userSchema.methods.comparePassword = async function (candidatePassword) {
+  if (!this.passwordHash) return false;
+  return await bcrypt.compare(candidatePassword, this.passwordHash);
+};
 
 userSchema.virtual("avatar").get(function () {
   return this.uploadedAvatar ?? this.googleAvatar ?? null;

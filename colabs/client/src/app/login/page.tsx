@@ -7,9 +7,51 @@ import { FcGoogle } from "react-icons/fc";
 import { BsEye, BsEyeSlash } from "react-icons/bs";
 
 const LoginPage = () => {
-  const { login } = useAuthStore();
+  const { login, loginWithPassword, register } = useAuthStore();
   const [isSignUp, setIsSignUp] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+  
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setErrorMsg("");
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setErrorMsg("");
+
+    let res;
+    if (isSignUp) {
+      if (!formData.firstName || !formData.lastName || !formData.email || !formData.password) {
+        setErrorMsg("All fields are required");
+        setIsLoading(false);
+        return;
+      }
+      res = await register(formData);
+    } else {
+      if (!formData.email || !formData.password) {
+        setErrorMsg("Email and password are required");
+        setIsLoading(false);
+        return;
+      }
+      res = await loginWithPassword({ email: formData.email, password: formData.password });
+    }
+
+    if (!res?.success) {
+      setErrorMsg(res?.message || "An error occurred");
+    }
+    setIsLoading(false);
+  };
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-neutral-50 to-neutral-100">
@@ -36,19 +78,31 @@ const LoginPage = () => {
           <div className="h-px flex-1 bg-neutral-200" />
         </div>
 
+        {errorMsg && (
+          <div className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-600">
+            {errorMsg}
+          </div>
+        )}
+
         <form
-          onSubmit={(e) => e.preventDefault()}
+          onSubmit={handleSubmit}
           className="flex flex-col gap-3"
         >
           {isSignUp && (
             <div className="flex gap-3">
               <input
                 type="text"
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleChange}
                 placeholder="First Name"
                 className="w-1/2 rounded-lg border border-neutral-300 px-4 py-3 text-sm text-neutral-700 placeholder:text-neutral-400 focus:border-neutral-500 focus:outline-none focus:ring-1 focus:ring-neutral-500"
               />
               <input
                 type="text"
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleChange}
                 placeholder="Last Name"
                 className="w-1/2 rounded-lg border border-neutral-300 px-4 py-3 text-sm text-neutral-700 placeholder:text-neutral-400 focus:border-neutral-500 focus:outline-none focus:ring-1 focus:ring-neutral-500"
               />
@@ -57,6 +111,9 @@ const LoginPage = () => {
 
           <input
             type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
             placeholder="Email"
             className="w-full rounded-lg border border-neutral-300 px-4 py-3 text-sm text-neutral-700 placeholder:text-neutral-400 focus:border-neutral-500 focus:outline-none focus:ring-1 focus:ring-neutral-500"
           />
@@ -64,6 +121,9 @@ const LoginPage = () => {
           <div className="relative">
             <input
               type={showPassword ? "text" : "password"}
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
               placeholder="Password"
               className="w-full rounded-lg border border-neutral-300 px-4 py-3 pr-10 text-sm text-neutral-700 placeholder:text-neutral-400 focus:border-neutral-500 focus:outline-none focus:ring-1 focus:ring-neutral-500"
             />
@@ -82,10 +142,16 @@ const LoginPage = () => {
 
           <button
             type="submit"
-            disabled
-            className="mt-2 w-full rounded-full bg-neutral-900 px-4 py-3 text-sm font-semibold text-white transition-all hover:bg-neutral-800 disabled:cursor-not-allowed disabled:opacity-60"
+            disabled={isLoading}
+            className="mt-2 w-full flex justify-center rounded-full bg-neutral-900 px-4 py-3 text-sm font-semibold text-white transition-all hover:bg-neutral-800 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {isSignUp ? "Create account" : "Log in"}
+            {isLoading ? (
+              <div className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
+            ) : isSignUp ? (
+              "Create account"
+            ) : (
+              "Log in"
+            )}
           </button>
         </form>
 
@@ -106,7 +172,11 @@ const LoginPage = () => {
         <p className="mt-6 text-center text-sm text-neutral-500">
           {isSignUp ? "Have an account?" : "Don\u0027t have an account?"}{" "}
           <button
-            onClick={() => setIsSignUp(!isSignUp)}
+            onClick={() => {
+              setIsSignUp(!isSignUp);
+              setErrorMsg("");
+              setFormData({ firstName: "", lastName: "", email: "", password: "" });
+            }}
             className="font-medium text-neutral-800 underline hover:text-neutral-600"
           >
             {isSignUp ? "Log in here" : "Sign up here"}
