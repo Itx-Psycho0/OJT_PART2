@@ -1,45 +1,44 @@
 import { v4 as uuidv4 } from "uuid";
 import Document from "../models/Document.js";
 import YjsState from "../models/YjsState.js";
-// import Template from "../models/Template.js"; // Uncomment if using a separate Template model
+import Collaboration from "../models/Collaboration.js";
 
 export const createDocument = async (req, res) => {
   try {
     const { templateId } = req.body;
-    const ownerId = req.user?.id; // Assumes auth middleware populates req.user
+    const userId = req.user?.id;
 
-    if (!ownerId) {
+    if (!userId) {
       return res.status(401).json({ error: "Unauthorized access" });
     }
 
     const docId = uuidv4();
     let title = "Untitled Document";
 
+    // Simulate template fetch logic if provided
     if (templateId) {
-      // Fetch template from DB (assuming Template model or using Document as template)
-      /* 
-      const template = await Template.findById(templateId);
-      if (template && template.initialTitle) {
-        title = template.initialTitle;
-      }
-      */
+      // e.g. title = template.initialTitle
     }
 
     const newDocument = new Document({
       docId,
       title,
-      ownerId,
+      ownerId: userId,
       ...(templateId && { templateId }),
     });
 
     await newDocument.save();
 
-    const newYjsState = new YjsState({
+    await YjsState.create({
       docId,
       updates: [],
     });
 
-    await newYjsState.save();
+    await Collaboration.create({
+      docId,
+      userId,
+      role: "owner"
+    });
 
     return res.status(201).json({
       docId: newDocument.docId,
@@ -52,13 +51,15 @@ export const createDocument = async (req, res) => {
   }
 };
 
-// GET /documents
 export const getDocuments = async (req, res) => {
   try {
-    const ownerId = req.user?.id;
-    if (!ownerId) return res.status(401).json({ error: "Unauthorized access" });
+    const userId = req.user?.id;
+    if (!userId) return res.status(401).json({ error: "Unauthorized access" });
 
-    const documents = await Document.find({ ownerId, isArchived: false }).sort({ updatedAt: -1 });
+    const collaborations = await Collaboration.find({ userId });
+    const docIds = collaborations.map(c => c.docId);
+
+    const documents = await Document.find({ docId: { $in: docIds }, isArchived: false }).sort({ updatedAt: -1 });
 
     return res.status(200).json(documents);
   } catch (error) {
@@ -67,20 +68,25 @@ export const getDocuments = async (req, res) => {
   }
 };
 
-// GET /documents/:docId
 export const getDocumentById = async (req, res) => {
   try {
     const { docId } = req.params;
-    const ownerId = req.user?.id;
+    const userId = req.user?.id;
 
-    if (!ownerId) return res.status(401).json({ error: "Unauthorized access" });
+    if (!userId) return res.status(401).json({ error: "Unauthorized access" });
 
     const document = await Document.findOne({ docId });
-
     if (!document) return res.status(404).json({ error: "Document not found" });
+
+    let collaboration = await Collaboration.findOne({ docId, userId });
     
-    if (document.ownerId.toString() !== ownerId) {
-      return res.status(403).json({ error: "Forbidden: You do not own this document" });
+    // Auto-add logic
+    if (!collaboration) {
+      collaboration = await Collaboration.create({
+        docId,
+        userId,
+        role: "editor"
+      });
     }
 
     return res.status(200).json(document);
@@ -90,25 +96,24 @@ export const getDocumentById = async (req, res) => {
   }
 };
 
-// PATCH /documents/:docId
 export const updateDocument = async (req, res) => {
   try {
     const { docId } = req.params;
     const { title } = req.body;
-    const ownerId = req.user?.id;
+    const userId = req.user?.id;
 
-    if (!ownerId) return res.status(401).json({ error: "Unauthorized access" });
+    if (!userId) return res.status(401).json({ error: "Unauthorized access" });
 
     if (!title || typeof title !== "string") {
       return res.status(400).json({ error: "Valid title is required" });
     }
 
     const document = await Document.findOne({ docId });
-
     if (!document) return res.status(404).json({ error: "Document not found" });
-    
-    if (document.ownerId.toString() !== ownerId) {
-      return res.status(403).json({ error: "Forbidden: You do not own this document" });
+
+    const collaboration = await Collaboration.findOne({ docId, userId });
+    if (!collaboration) {
+      return res.status(403).json({ error: "Forbidden: Access denied" });
     }
 
     document.title = title;
@@ -121,20 +126,19 @@ export const updateDocument = async (req, res) => {
   }
 };
 
-// DELETE /documents/:docId
 export const deleteDocument = async (req, res) => {
   try {
     const { docId } = req.params;
-    const ownerId = req.user?.id;
+    const userId = req.user?.id;
 
-    if (!ownerId) return res.status(401).json({ error: "Unauthorized access" });
+    if (!userId) return res.status(401).json({ error: "Unauthorized access" });
 
     const document = await Document.findOne({ docId });
-
     if (!document) return res.status(404).json({ error: "Document not found" });
-    
-    if (document.ownerId.toString() !== ownerId) {
-      return res.status(403).json({ error: "Forbidden: You do not own this document" });
+
+    const collaboration = await Collaboration.findOne({ docId, userId });
+    if (!collaboration) {
+      return res.status(403).json({ error: "Forbidden: Access denied" });
     }
 
     document.isArchived = true;
