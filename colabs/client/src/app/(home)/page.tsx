@@ -1,6 +1,7 @@
 import React, { Suspense } from "react";
 import { Navbar } from "./navbar";
 import { TemplateGallery } from "./templates-gallery";
+import { RecentDocuments } from "./recent-documents";
 
 const Page = () => {
   return (
@@ -12,6 +13,7 @@ const Page = () => {
       </div>
       <div className="mt-20">
         <TemplateGallery />
+        <RecentDocuments />
       </div>
     </div>
   );
