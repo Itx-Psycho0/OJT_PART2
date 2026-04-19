@@ -13,7 +13,7 @@ import authRoutes from "./routes/auth.routes.js";
 import notFound from "./middleware/notFound.middleware.js";
 import errorHandler from "./middleware/error.middleware.js";
 import { Server } from "socket.io";
-import { initCollaboration } from "./sockets/collaboration.js";
+
 import documentRoutes from "./routes/document.routes.js";
 import { initializeYjsSocket } from "./socket/yjs.socket.js";
 
@@ -74,7 +74,7 @@ const io = new Server(server, {
 });
 
 
-initCollaboration(io);
+
 initializeYjsSocket(io);
 
 // Server Start
