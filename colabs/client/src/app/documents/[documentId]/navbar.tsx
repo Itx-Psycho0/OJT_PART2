@@ -19,7 +19,11 @@ import {
 import { FileIcon, LogOut, ChevronDown } from "lucide-react";
 import { useAuthStore } from "@/store/use-auth-store";
 
-const Navbar = () => {
+interface NavbarProps {
+  documentId: string;
+}
+
+const Navbar = ({ documentId }: NavbarProps) => {
   const { user, logout } = useAuthStore();
 
   return (
@@ -29,7 +33,7 @@ const Navbar = () => {
           <Image src="/logo.svg" alt="logo" width={45} height={45} />
         </Link>
         <div className="flex flex-col">
-          <DocumentInput />
+          <DocumentInput documentId={documentId} />
           <div className="flex">
             <Menubar className="border-none bg-transparent shadow-none h-auto p-0">
               <MenubarMenu>
