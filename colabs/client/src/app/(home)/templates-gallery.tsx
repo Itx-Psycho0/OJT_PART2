@@ -9,16 +9,24 @@ import {
 } from "@/components/ui/carousel";
 import { templates } from "@/constants/templates";
 import { cn } from "@/lib/utils";
+import { useAuthStore } from "@/store/use-auth-store";
 
 import { useRouter } from "next/navigation";
 import { useState, useRef } from "react";
 
 export const TemplateGallery = () => {
   const router = useRouter();
+  const { user } = useAuthStore();
   const [isCreating, setIsCreating] = useState(false);
   const isCreatingRef = useRef(false);
 
   const onTemplateClick = async (templateId: string, title?: string) => {
+    // Redirect to login if not authenticated
+    if (!user) {
+      router.push("/login");
+      return;
+    }
+
     if (isCreatingRef.current) return;
     isCreatingRef.current = true;
     setIsCreating(true);
@@ -34,14 +42,22 @@ export const TemplateGallery = () => {
         body: JSON.stringify({ templateId, title }),
       });
 
+      if (response.status === 401) {
+        // Auth expired  redirect to login
+        router.push("/login");
+        return;
+      }
+
       if (!response.ok) {
-        throw new Error("Failed to create document");
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || "Failed to create document");
       }
 
       const data = await response.json();
       router.push(`/documents/${data.docId}`);
     } catch (error) {
       console.error("Error creating document:", error);
+      alert(error instanceof Error ? error.message : "Something went wrong. Please try again.");
     } finally {
       setIsCreating(false);
       isCreatingRef.current = false;

@@ -5,7 +5,7 @@ import Collaboration from "../models/Collaboration.js";
 
 export const createDocument = async (req, res) => {
   try {
-    const { templateId } = req.body;
+    const { templateId, title: reqTitle } = req.body;
     const userId = req.user?.id;
 
     if (!userId) {
@@ -13,12 +13,7 @@ export const createDocument = async (req, res) => {
     }
 
     const docId = uuidv4();
-    let title = "Untitled Document";
-
-    // Simulate template fetch logic if provided
-    if (templateId) {
-      // e.g. title = template.initialTitle
-    }
+    const title = reqTitle || "Untitled Document";
 
     const newDocument = new Document({
       docId,
