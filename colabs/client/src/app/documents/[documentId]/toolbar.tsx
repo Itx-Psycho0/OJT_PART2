@@ -2,6 +2,7 @@
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { useEditorStore } from "@/store/use-editor-store";
+import { useCommentStore } from "@/store/use-comment-store";
 import {
   AlignCenterIcon,
   AlignJustifyIcon,
@@ -673,7 +674,7 @@ const Toolbar = () => {
       {
         label: "Comment",
         icon: MessageSquarePlusIcon,
-        onClick: () => console.log("comment"),
+        onClick: () => useCommentStore.getState().toggle(),
         isActive: false,
       },
       {

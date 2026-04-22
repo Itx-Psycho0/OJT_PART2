@@ -142,7 +142,7 @@ const Navbar = ({ documentId }: NavbarProps) => {
                 <MenubarTrigger className="text-sm font-normal py-0.5 px-[7px] rounded-sm hover:bg-muted h-auto">
                   File
                 </MenubarTrigger>
-                <MenubarContent className="bg-white border border-neutral-200 shadow-md rounded-md min-w-[220px]">
+                <MenubarContent className="min-w-[220px]">
                   <MenubarItem onClick={onSave}>
                     <FileIcon className="size-4 mr-2" />
                     Save
@@ -154,7 +154,7 @@ const Navbar = ({ documentId }: NavbarProps) => {
                       <FileTextIcon className="size-4 mr-2" />
                       Download
                     </MenubarSubTrigger>
-                    <MenubarSubContent className="bg-white border border-neutral-200 shadow-md">
+                    <MenubarSubContent >
                       <MenubarItem onClick={onDownloadHTML}>
                         <GlobeIcon className="size-4 mr-2" />
                         HTML (.html)
@@ -183,7 +183,7 @@ const Navbar = ({ documentId }: NavbarProps) => {
                 <MenubarTrigger className="text-sm font-normal py-0.5 px-[7px] rounded-sm hover:bg-muted h-auto">
                   Edit
                 </MenubarTrigger>
-                <MenubarContent className="bg-white border border-neutral-200 shadow-md rounded-md min-w-[220px]">
+                <MenubarContent className="min-w-[220px]">
                   <MenubarItem
                     onClick={() => editor?.chain().focus().undo().run()}
                   >
@@ -240,13 +240,13 @@ const Navbar = ({ documentId }: NavbarProps) => {
                 <MenubarTrigger className="text-sm font-normal py-0.5 px-[7px] rounded-sm hover:bg-muted h-auto">
                   Insert
                 </MenubarTrigger>
-                <MenubarContent className="bg-white border border-neutral-200 shadow-md rounded-md min-w-[220px]">
+                <MenubarContent className="min-w-[220px]">
                   <MenubarSub>
                     <MenubarSubTrigger>
                       <ImageIcon className="size-4 mr-2" />
                       Image
                     </MenubarSubTrigger>
-                    <MenubarSubContent className="bg-white border border-neutral-200 shadow-md">
+                    <MenubarSubContent >
                       <MenubarItem
                         onClick={() => {
                           const input = document.createElement("input");
@@ -332,14 +332,14 @@ const Navbar = ({ documentId }: NavbarProps) => {
                 <MenubarTrigger className="text-sm font-normal py-0.5 px-[7px] rounded-sm hover:bg-muted h-auto">
                   Format
                 </MenubarTrigger>
-                <MenubarContent className="bg-white border border-neutral-200 shadow-md rounded-md min-w-[220px]">
+                <MenubarContent className="min-w-[220px]">
                   {/* Text Style */}
                   <MenubarSub>
                     <MenubarSubTrigger>
                       <TextIcon className="size-4 mr-2" />
                       Text
                     </MenubarSubTrigger>
-                    <MenubarSubContent className="bg-white border border-neutral-200 shadow-md min-w-[180px]">
+                    <MenubarSubContent className="min-w-[180px]">
                       <MenubarItem
                         onClick={() =>
                           editor?.chain().focus().toggleBold().run()
@@ -384,7 +384,7 @@ const Navbar = ({ documentId }: NavbarProps) => {
                       <Heading1Icon className="size-4 mr-2" />
                       Heading
                     </MenubarSubTrigger>
-                    <MenubarSubContent className="bg-white border border-neutral-200 shadow-md">
+                    <MenubarSubContent >
                       <MenubarItem
                         onClick={() =>
                           editor?.chain().focus().setParagraph().run()
@@ -465,7 +465,7 @@ const Navbar = ({ documentId }: NavbarProps) => {
                       <AlignLeftIcon className="size-4 mr-2" />
                       Align
                     </MenubarSubTrigger>
-                    <MenubarSubContent className="bg-white border border-neutral-200 shadow-md">
+                    <MenubarSubContent >
                       <MenubarItem
                         onClick={() =>
                           editor?.chain().focus().setTextAlign("left").run()
@@ -507,7 +507,7 @@ const Navbar = ({ documentId }: NavbarProps) => {
                       <ListCollapseIcon className="size-4 mr-2" />
                       Line Spacing
                     </MenubarSubTrigger>
-                    <MenubarSubContent className="bg-white border border-neutral-200 shadow-md">
+                    <MenubarSubContent >
                       {[
                         { label: "Default", value: "normal" },
                         { label: "Single", value: "1" },
@@ -533,7 +533,7 @@ const Navbar = ({ documentId }: NavbarProps) => {
                       <ListIcon className="size-4 mr-2" />
                       Lists
                     </MenubarSubTrigger>
-                    <MenubarSubContent className="bg-white border border-neutral-200 shadow-md">
+                    <MenubarSubContent >
                       <MenubarItem
                         onClick={() =>
                           editor?.chain().focus().toggleBulletList().run()

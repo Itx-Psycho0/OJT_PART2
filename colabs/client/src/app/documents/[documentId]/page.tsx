@@ -4,6 +4,7 @@ import Navbar from "./navbar";
 import { DocumentCheck } from "./document-check";
 import { CollaborationProvider } from "./collaboration-provider";
 import { Editor } from "./editor";
+import { CommentPanelWrapper } from "./comment-panel-wrapper";
 
 interface DocumentIdProps {
   params: Promise<{ documentId: string }>;
@@ -21,6 +22,7 @@ const DocumentIdPage = async ({ params }: DocumentIdProps) => {
           <div className="pt-[114px] print:pt-0">
             <Editor />
           </div>
+          <CommentPanelWrapper documentId={documentId} />
         </div>
       </CollaborationProvider>
     </DocumentCheck>
