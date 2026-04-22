@@ -15,6 +15,7 @@ import errorHandler from "./middleware/error.middleware.js";
 import { Server } from "socket.io";
 
 import documentRoutes from "./routes/document.routes.js";
+import shareRoutes from "./routes/share.routes.js";
 import { initializeYjsSocket } from "./socket/yjs.socket.js";
 
 const app = express();
@@ -56,6 +57,7 @@ app.use(passport.session());
 app.use("/api/health", healthRoutes);
 app.use("/auth", authRoutes);
 app.use("/api/documents", documentRoutes);
+app.use("/api/documents", shareRoutes);
 
 // Root route
 app.get("/", (req, res) => {
