@@ -16,44 +16,20 @@ import Color from "@tiptap/extension-color";
 import Highlight from "@tiptap/extension-highlight";
 import Link from "@tiptap/extension-link";
 import TextAlign from "@tiptap/extension-text-align";
-import * as Y from "yjs";
-import { SocketIOProvider } from "y-socket.io";
 import Collaboration from "@tiptap/extension-collaboration";
-import { useMemo, useEffect } from "react";
+import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
 
 import { useEditorStore } from "@/store/use-editor-store";
+import { useAuthStore } from "@/store/use-auth-store";
 import { FontSizeExtension } from "@/extensions/font-size";
 import { LineHeightExtension } from "@/extensions/line-height";
 import { Ruler } from "./ruler";
+import { useCollaboration, getUserColor } from "./collaboration-provider";
 
-interface EditorProps {
-  documentId: string;
-}
-
-export const Editor = ({ documentId }: EditorProps) => {
+export const Editor = () => {
   const { setEditor } = useEditorStore();
-
-  const { ydoc, provider } = useMemo(() => {
-    const ydoc = new Y.Doc();
-    const SOCKET_URL =
-      process.env.NEXT_PUBLIC_SOCKET_URL || "http://localhost:5000";
-
-    const provider = new SocketIOProvider(
-      SOCKET_URL,
-      documentId || "my-doc",
-      ydoc,
-      { autoConnect: true },
-    );
-    return { ydoc, provider };
-  }, [documentId]);
-
-  useEffect(() => {
-    return () => {
-      if (process.env.NODE_ENV === "production") {
-        provider.destroy();
-      }
-    };
-  }, [provider]);
+  const { user } = useAuthStore();
+  const { ydoc, provider } = useCollaboration();
 
   const editor = useEditor({
     immediatelyRender: false,
@@ -94,6 +70,18 @@ export const Editor = ({ documentId }: EditorProps) => {
       }),
       Collaboration.configure({
         document: ydoc,
+      }),
+      CollaborationCursor.configure({
+        provider,
+        user: user
+          ? {
+              name: user.displayName,
+              color: getUserColor(user.id),
+            }
+          : {
+              name: "Anonymous",
+              color: "#808080",
+            },
       }),
       LineHeightExtension.configure({
         types: ["heading", "paragraph"],

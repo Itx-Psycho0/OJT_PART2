@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 import DocumentInput from "./document-input";
 import { ShareDialog } from "./share-dialog";
+import { ActiveUsers } from "./active-users";
 import {
   Menubar,
   MenubarContent,
@@ -569,6 +570,8 @@ const Navbar = ({ documentId }: NavbarProps) => {
       </div>
 
       <div className="flex items-center gap-3">
+        {/* Active Users */}
+        <ActiveUsers />
         {/* Share Button */}
         <ShareButton documentId={documentId} />
         {user && (
