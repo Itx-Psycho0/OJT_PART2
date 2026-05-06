@@ -15,7 +15,6 @@ import {
   List,
   ChevronDown,
   ArrowUpDown,
-  Calendar,
   Search,
 } from "lucide-react";
 import {
@@ -145,7 +144,6 @@ function SkeletonRow() {
 
 function DocumentCard({
   doc,
-  isOwner,
   onOpen,
   onDelete,
   isDeleting,
