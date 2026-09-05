@@ -1,4 +1,4 @@
-# CoLabs - Reak Time Collaborative editor
+# CoLabs - Real Time Collaborative editor
 
 This repository contains learning materials, documentation, and practice projects for On-the-Job Training (OJT).
 
